@@ -1,0 +1,3 @@
+
+[build]
+rustflags = ["-L", "framework=/Applications/OBS/current/OBS.app/Contents/Frameworks"]
