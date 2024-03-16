@@ -915,8 +915,33 @@ unsafe extern "C" fn settings_list_modified(
                 }
             }
             WidgetKind::Choice { .. } => {
-                // TODO: SETTINGS_AUTO_SPLITTER_SETTINGS_CHOICE
-                warn!("Unimplemented setting type Choice");
+                // TODO: enable / visible choice options that belong here,
+                //       disable / invisible chioce options that don't belong here.
+                obs_property_set_enabled(enable_property, false);
+                obs_property_set_enabled(file_select_property, false);
+                obs_property_set_enabled(choice_property, true);
+                obs_property_set_visible(enable_property, false);
+                obs_property_set_visible(file_select_property, false);
+                obs_property_set_visible(choice_property, true);
+                let val_cs: CString;
+                let val_ptr = match state
+                    .global_timer
+                    .auto_splitter
+                    .settings_map()
+                    .unwrap_or_default()
+                    .get(user_setting.key.as_ref())
+                {
+                    Some(Value::String(value)) => {
+                        val_cs = CString::new(value.as_bytes()).unwrap_or_default();
+                        val_cs.as_ptr()
+                    }
+                    _ => ptr::null(),
+                };
+                obs_data_set_string(
+                    settings,
+                    SETTINGS_AUTO_SPLITTER_SETTINGS_CHOICE,
+                    val_ptr,
+                );
             }
             WidgetKind::FileSelect { .. } => {
                 obs_property_set_enabled(enable_property, false);
@@ -1650,7 +1675,6 @@ unsafe extern "C" fn get_properties(data: *mut c_void) -> *mut obs_properties_t 
             ptr::null(),
         );
 
-        // TODO: SETTINGS_AUTO_SPLITTER_SETTINGS_CHOICE
         let settings_choice = obs_properties_add_list(
             props,
             SETTINGS_AUTO_SPLITTER_SETTINGS_CHOICE,
