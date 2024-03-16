@@ -933,7 +933,7 @@ unsafe extern "C" fn settings_list_modified(
                     .get(user_setting.key.as_ref())
                 {
                     Some(Value::String(value)) => {
-                        val_cs = CString::new(value.as_ref()).unwrap_or_default();
+                        val_cs = CString::new(pair_to_lpstr((list_setting_string, value))).unwrap_or_default();
                         val_cs.as_ptr()
                     }
                     _ => ptr::null(),
@@ -1122,9 +1122,14 @@ unsafe extern "C" fn settings_choice_modified(
 
     match state.global_timer.auto_splitter.settings_map() {
         Some(mut map) => {
+            let nab = value.to_string_lossy();
+            let (skey, okey) = lpstr_to_pair(&nab);
+            if skey != setting_key {
+                warn!("Tried to set invalid setting value");
+            }
             map.insert(
                 Arc::from(setting_key),
-                Value::String(Arc::from(value.to_string_lossy())),
+                Value::String(Arc::from(okey)),
             );
             state.global_timer.auto_splitter.set_settings_map(map);
         }
@@ -1744,15 +1749,15 @@ unsafe extern "C" fn get_properties(data: *mut c_void) -> *mut obs_properties_t 
                     for option in options.iter() {
                         let option_description = CString::new(option.description.as_ref());
                         
-                        let option_key = CString::new(option.key.as_ref());
+                        let setting_option_key = CString::new(pair_to_lpstr((&setting.key, &option.key)));
 
-                        if let (Ok(option_key), Ok(option_description)) =
-                            (option_key, option_description)
+                        if let (Ok(setting_option_key), Ok(option_description)) =
+                            (setting_option_key, option_description)
                         {
                             obs_property_list_add_string(
                                 settings_choice,
                                 option_description.as_ptr(),
-                                option_key.as_ptr(),
+                                setting_option_key.as_ptr(),
                             );
                         } else {
                             warn!(
@@ -1965,4 +1970,14 @@ pub extern "C" fn obs_module_load() -> bool {
     auto_splitters::set_up();
 
     true
+}
+
+fn pair_to_lpstr((a, b): (&str, &str)) -> String {
+    format!("{:08}{}{}", a.len(), a, b)
+}
+
+fn lpstr_to_pair(nab: &str) -> (&str, &str) {
+    let n: usize = nab[0..8].parse().unwrap_or_default();
+    let np8 = n + 8;
+    (&nab[8..np8], &nab[np8..])
 }
