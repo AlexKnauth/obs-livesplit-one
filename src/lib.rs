@@ -923,6 +923,7 @@ unsafe extern "C" fn settings_list_modified(
                 obs_property_set_visible(enable_property, false);
                 obs_property_set_visible(file_select_property, false);
                 obs_property_set_visible(choice_property, true);
+                // Needs to outlive the pointer.
                 let val_cs: CString;
                 let val_ptr = match state
                     .global_timer
@@ -932,7 +933,7 @@ unsafe extern "C" fn settings_list_modified(
                     .get(user_setting.key.as_ref())
                 {
                     Some(Value::String(value)) => {
-                        val_cs = CString::new(value.as_bytes()).unwrap_or_default();
+                        val_cs = CString::new(value.as_ref()).unwrap_or_default();
                         val_cs.as_ptr()
                     }
                     _ => ptr::null(),
@@ -1737,6 +1738,29 @@ unsafe extern "C" fn get_properties(data: *mut c_void) -> *mut obs_properties_t 
                         "Couldn't add invalid setting to the settings list ({}: {})",
                         setting.key, setting.description
                     );
+                }
+
+                if let WidgetKind::Choice { options, .. } = &setting.kind {
+                    for option in options.iter() {
+                        let option_description = CString::new(option.description.as_ref());
+                        
+                        let option_key = CString::new(option.key.as_ref());
+
+                        if let (Ok(option_key), Ok(option_description)) =
+                            (option_key, option_description)
+                        {
+                            obs_property_list_add_string(
+                                settings_choice,
+                                option_description.as_ptr(),
+                                option_key.as_ptr(),
+                            );
+                        } else {
+                            warn!(
+                                "Couldn't add invalid option to the choice ({}: {})",
+                                option.key, option.description
+                            );
+                        }
+                    }
                 }
             }
         }
