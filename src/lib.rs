@@ -1981,3 +1981,26 @@ fn lpstr_to_pair(nab: &str) -> (&str, &str) {
     let np8 = n + 8;
     (&nab[8..np8], &nab[np8..])
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_pair_to_lpstr() {
+        assert_eq!(pair_to_lpstr(("", "")), "00000000");
+        assert_eq!(pair_to_lpstr(("abc", "def")), "00000003abcdef");
+        assert_eq!(pair_to_lpstr(("abcdefgh", "ijklmnop")), "00000008abcdefghijklmnop");
+        assert_eq!(pair_to_lpstr(("abcdefghijklmnopqrstuvwxyz", "!@#$%^&*()")), "00000026abcdefghijklmnopqrstuvwxyz!@#$%^&*()");
+        assert_eq!(pair_to_lpstr(("0123456789abcdefghijklmnopqrstuvwxyz", "!@#$%^&*()")), "000000360123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()");
+    }
+
+    #[test]
+    fn test_lpstr_to_pair() {
+        assert_eq!(lpstr_to_pair("00000000"), ("", ""));
+        assert_eq!(lpstr_to_pair("00000003abcdef"), ("abc", "def"));
+        assert_eq!(lpstr_to_pair("00000008abcdefghijklmnop"), ("abcdefgh", "ijklmnop"));
+        assert_eq!(lpstr_to_pair("00000026abcdefghijklmnopqrstuvwxyz!@#$%^&*()"), ("abcdefghijklmnopqrstuvwxyz", "!@#$%^&*()"));
+        assert_eq!(lpstr_to_pair("000000360123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()"), ("0123456789abcdefghijklmnopqrstuvwxyz", "!@#$%^&*()"));
+    }
+}
