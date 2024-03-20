@@ -61,6 +61,7 @@ use {
     self::ffi::{
         obs_data_set_bool, obs_data_set_string, obs_properties_add_list,
         obs_property_list_add_string, obs_property_set_description, obs_property_set_enabled,
+        obs_property_list_item_disable,
         OBS_COMBO_FORMAT_STRING, OBS_COMBO_TYPE_LIST, OBS_TEXT_INFO,
     },
     livesplit_core::auto_splitting,
@@ -917,6 +918,10 @@ unsafe extern "C" fn settings_list_modified(
             WidgetKind::Choice { .. } => {
                 // TODO: enable / visible choice options that belong here,
                 //       disable / invisible chioce options that don't belong here.
+                // TODO: obs_property_list_item_disable
+                obs_property_list_item_disable(choice_property, 4, true);
+                obs_property_list_item_disable(choice_property, 5, true);
+                obs_property_list_item_disable(choice_property, 6, true);
                 obs_property_set_enabled(enable_property, false);
                 obs_property_set_enabled(file_select_property, false);
                 obs_property_set_enabled(choice_property, true);

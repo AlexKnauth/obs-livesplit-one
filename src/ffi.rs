@@ -96,6 +96,12 @@ extern "C" {
         name: *const c_char,
         val: *const c_char,
     ) -> size_t;
+    #[cfg(feature = "auto-splitting")]
+    pub fn obs_property_list_item_disable(
+        prop: *mut obs_property_t,
+        idx: size_t,
+        disabled: bool,
+    );
     pub fn obs_properties_add_int(
         props: *mut obs_properties_t,
         name: *const c_char,
