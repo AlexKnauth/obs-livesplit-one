@@ -1189,7 +1189,7 @@ checksum = "01cda141df6706de531b6c46c3a33ecca755538219bd484262fa09410c13539c"
 [[package]]
 name = "livesplit-auto-splitting"
 version = "0.1.0"
-source = "git+https://github.com/LiveSplit/livesplit-core#bb8cb41fe60ce25e5147342bb3df2eeb27087524"
+source = "git+https://github.com/AlexKnauth/livesplit-core?branch=split-index#17cd4eb09c9509920875a283bf9fbf313d14d5f8"
 dependencies = [
  "anyhow",
  "arc-swap",
@@ -1211,7 +1211,7 @@ dependencies = [
 [[package]]
 name = "livesplit-core"
 version = "0.13.0"
-source = "git+https://github.com/LiveSplit/livesplit-core#bb8cb41fe60ce25e5147342bb3df2eeb27087524"
+source = "git+https://github.com/AlexKnauth/livesplit-core?branch=split-index#17cd4eb09c9509920875a283bf9fbf313d14d5f8"
 dependencies = [
  "base64-simd",
  "bytemuck",
@@ -1246,7 +1246,7 @@ dependencies = [
 [[package]]
 name = "livesplit-hotkey"
 version = "0.7.0"
-source = "git+https://github.com/LiveSplit/livesplit-core#bb8cb41fe60ce25e5147342bb3df2eeb27087524"
+source = "git+https://github.com/AlexKnauth/livesplit-core?branch=split-index#17cd4eb09c9509920875a283bf9fbf313d14d5f8"
 dependencies = [
  "bitflags 2.5.0",
  "cfg-if",
@@ -1263,7 +1263,7 @@ dependencies = [
 [[package]]
 name = "livesplit-title-abbreviations"
 version = "0.3.0"
-source = "git+https://github.com/LiveSplit/livesplit-core#bb8cb41fe60ce25e5147342bb3df2eeb27087524"
+source = "git+https://github.com/AlexKnauth/livesplit-core?branch=split-index#17cd4eb09c9509920875a283bf9fbf313d14d5f8"
 
 [[package]]
 name = "log"
