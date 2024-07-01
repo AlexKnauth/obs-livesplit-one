@@ -1189,7 +1189,6 @@ checksum = "01cda141df6706de531b6c46c3a33ecca755538219bd484262fa09410c13539c"
 [[package]]
 name = "livesplit-auto-splitting"
 version = "0.1.0"
-source = "git+https://github.com/AlexKnauth/livesplit-core?branch=Refragg-2#6981cb320a0346a216c8161a1c67e004a1b6899b"
 dependencies = [
  "anyhow",
  "arc-swap",
@@ -1211,7 +1210,6 @@ dependencies = [
 [[package]]
 name = "livesplit-core"
 version = "0.13.0"
-source = "git+https://github.com/AlexKnauth/livesplit-core?branch=Refragg-2#6981cb320a0346a216c8161a1c67e004a1b6899b"
 dependencies = [
  "base64-simd",
  "bytemuck",
@@ -1246,7 +1244,6 @@ dependencies = [
 [[package]]
 name = "livesplit-hotkey"
 version = "0.7.0"
-source = "git+https://github.com/AlexKnauth/livesplit-core?branch=Refragg-2#6981cb320a0346a216c8161a1c67e004a1b6899b"
 dependencies = [
  "bitflags 2.5.0",
  "cfg-if",
@@ -1263,7 +1260,6 @@ dependencies = [
 [[package]]
 name = "livesplit-title-abbreviations"
 version = "0.3.0"
-source = "git+https://github.com/AlexKnauth/livesplit-core?branch=Refragg-2#6981cb320a0346a216c8161a1c67e004a1b6899b"
 
 [[package]]
 name = "log"
