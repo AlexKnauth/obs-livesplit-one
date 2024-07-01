@@ -14,7 +14,7 @@ members = ["obs"]
 crate-type = ["cdylib"]
 
 [dependencies]
-livesplit-core = { git = "https://github.com/LiveSplit/livesplit-core", features = [
+livesplit-core = { git = "https://github.com/AlexKnauth/livesplit-core", branch = "legacy_raw_xml", features = [
     "software-rendering",
     "font-loading",
 ] }
