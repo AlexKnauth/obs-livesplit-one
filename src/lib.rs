@@ -545,6 +545,10 @@ impl State {
 
         self.image_cache.collect();
 
+        self.update_auto_splitter_fields();
+    }
+
+    unsafe fn update_auto_splitter_fields(&mut self) {
         #[cfg(feature = "auto-splitting")]
         {
             let mut needs_properties_update = false;
