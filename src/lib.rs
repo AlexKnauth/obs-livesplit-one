@@ -481,7 +481,11 @@ impl State {
     ) -> Self {
         debug!("Loading settings.");
 
-        let global_timer = get_global_timer(splits_path);
+        let global_timer = get_global_timer(
+            splits_path,
+            #[cfg(feature = "auto-splitting")]
+            &local_auto_splitter,
+        );
         global_timer
             .timer
             .auto_save
@@ -493,11 +497,6 @@ impl State {
         obs_enter_graphics();
         let texture = gs_texture_create(width, height, GS_RGBA, 1, ptr::null_mut(), GS_DYNAMIC);
         obs_leave_graphics();
-
-        #[cfg(feature = "auto-splitting")]
-        if let Some(local_auto_splitter) = &local_auto_splitter {
-            auto_splitter_load(&global_timer, local_auto_splitter.clone())
-        }
 
         Self {
             #[cfg(feature = "auto-splitting")]
@@ -1810,10 +1809,17 @@ unsafe extern "C" fn update(data: *mut c_void, settings_obj: *mut obs_data_t) {
 }
 
 fn handle_splits_path_change(state: &mut State, splits_path: PathBuf) {
-    state.global_timer = get_global_timer(splits_path);
+    state.global_timer = get_global_timer(
+        splits_path,
+        #[cfg(feature = "auto-splitting")]
+        &state.local_auto_splitter,
+    );
 }
 
-fn get_global_timer(splits_path: PathBuf) -> Arc<GlobalTimer> {
+fn get_global_timer(
+    splits_path: PathBuf,
+    #[cfg(feature = "auto-splitting")] local_auto_splitter: &Option<PathBuf>,
+) -> Arc<GlobalTimer> {
     let mut timers = TIMERS.lock().unwrap();
     timers.retain(|timer| timer.strong_count() > 0);
     if let Some(timer) = timers.iter().find_map(|timer| {
@@ -1844,6 +1850,10 @@ fn get_global_timer(splits_path: PathBuf) -> Arc<GlobalTimer> {
             #[cfg(feature = "auto-splitting")]
             auto_splitter_is_enabled: AtomicBool::new(false),
         });
+        #[cfg(feature = "auto-splitting")]
+        if let Some(local_auto_splitter) = local_auto_splitter {
+            auto_splitter_load(&global_timer, local_auto_splitter.clone());
+        }
         timers.push(Arc::downgrade(&global_timer));
         global_timer
     }
